@@ -1,0 +1,6 @@
+default:
+  host: localhost
+  user: root
+  password: '08041984'
+  driver: mysql
+  db_name: quiequetest
