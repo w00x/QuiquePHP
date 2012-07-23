@@ -5,9 +5,15 @@ class test_controller extends QuiqueController{
         $this->hello = "Hola mundo !!";
         $cliente = new personas_model();
         $cliente->select("nombre,id");
-        $this->foo = $cliente->findAllByEdad(23);
+        $this->foo = $cliente->find(0);
         
         $this->view('index');
+    }
+    
+    public function hello() {
+        $this->hola = "Helloooo!!!!";
+        
+        $this->view('test2/oliii');
     }
 }
 ?>

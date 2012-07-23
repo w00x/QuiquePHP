@@ -48,6 +48,16 @@ class QuiqueModel {
         $this->sql_select = " ".$columns." ";
     }
     
+    public function find($id) {
+        $sql = "SELECT {$this->sql_select} FROM {$this->model_name} WHERE id = :id";
+        return $this->sql_query($sql,array(":id"=>$id))->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    public function delete($id) {
+        $sql = "DELETE FROM {$this->model_name} WHERE id = :id";
+        return $this->sql_query($sql,array(":id"=>$id))->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
     public function where($sql_where,$arr_params = array()) {
         $sql = "SELECT {$this->sql_select} FROM {$this->model_name} WHERE ";
         return $this->sql_query($sql.$sql_where,$arr_params)->fetchAll(PDO::FETCH_ASSOC);

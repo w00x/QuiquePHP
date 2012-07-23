@@ -24,6 +24,8 @@ require_once 'includes.php';
 
 $route = new Route();
 
+print_r($route->match_route($_SERVER['REQUEST_URI']));
+
 $requestURI[1] = str_replace("?", "", $requestURI[1]);
 
 if($route->isModule($requestURI[1])) {

@@ -1,0 +1,8 @@
+/lala:
+  app: default
+  controller: test
+  action: hello
+/hello:
+  app: default
+  controller: test
+  action: index

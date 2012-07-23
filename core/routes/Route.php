@@ -13,5 +13,13 @@ class Route {
             return false;
         }
     }
+    
+    public function match_route($url) {
+        require_once 'spyc/spyc.php';
+        $routes = Spyc::YAMLLoad(CONFIG_PATH.'/routes.yml');
+        if(array_key_exists($url, $routes)) {
+            return array("app"=>$routes[$url]["app"],"controller"=>$routes[$url]["controller"],"action"=>$routes[$url]["action"]);
+        }
+    }
 }
 ?>
