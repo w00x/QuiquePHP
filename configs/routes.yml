@@ -1,4 +1,4 @@
-/lala:
+/lala/:edad/:peso:
   app: default
   controller: test
   action: hello
