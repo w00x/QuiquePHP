@@ -25,7 +25,6 @@ class Route {
             if($pos_dos_puntos !== FALSE) {
                 $ruta_pura = substr($key, 0,$pos_dos_puntos);
                 $variables_ruta = $this->variables_route($key);
-                
             }
             else {
                 $ruta_pura = $key;
@@ -39,35 +38,36 @@ class Route {
                 $url = $url."/";
             }
             
-            if(strpos($ruta_pura, $url) == 0) {
+            if(strpos($url,$ruta_pura) === 0) {
                 if(count($variables_ruta) > 0) {
                     $params_str = str_replace($ruta_pura, "", $url);
-                    if($params_str[strlen($params_str)-1] == "/") {
-                        $params_str = substr($params_str, 0,-1);
-                    }
-                    $params_arr = explode("/", $params_str);
-                    if(count($params_arr) == count($variables_ruta)) {
-                        $params = array();
-                        for($i=0;$i<count($params_arr);$i++) {
-                            $params[$variables_ruta[$i]] = $params_arr[$i];
+                    
+                    if(strlen($params_str) != 0) {    
+                        if($params_str[strlen($params_str)-1] == "/") {
+                            $params_str = substr($params_str, 0,-1);
                         }
-                        return array("app"=>$routes[$key]["app"],"controller"=>$routes[$key]["controller"],"action"=>$routes[$key]["action"],"params"=>$params);
+                        $params_arr = explode("/", $params_str);
+                        if(count($params_arr) == count($variables_ruta)) {
+                            $params = array();
+                            for($i=0;$i<count($params_arr);$i++) {
+                                $params[$variables_ruta[$i]] = $params_arr[$i];
+                            }
+                            return array("app"=>$routes[$key]["app"],"controller"=>$routes[$key]["controller"],"action"=>$routes[$key]["action"],"params"=>$params);
+                        }
                     }
                 }
                 else {
                     return array("app"=>$routes[$key]["app"],"controller"=>$routes[$key]["controller"],"action"=>$routes[$key]["action"],"params"=>array());
                 }
             }
-            else {
-                return false;
-            }
         }
+        return false;
     }
     
     private function variables_route($route) {
         $url_tmp = $route;
         
-        if($route[strlen($route)] != "/") {
+        if($route[strlen($route)-1] != "/") {
             $url_tmp = $url_tmp."/";
         }
         

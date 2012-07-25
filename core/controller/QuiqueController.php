@@ -3,6 +3,7 @@
 class QuiqueController {
     private $vista;
     private $controller;
+    private $__params;
     
     public function __construct() {
         $helper_path = APP_PATH.'/'.MODULE_NAME.'/helpers/'.CONTROLLER_NAME.'_helper.php';
@@ -63,5 +64,9 @@ class QuiqueController {
                 echo '<script type="text/javascript" src="'.$js_path.$js_file.'"></script>'.PHP_EOL;
             }
         }
+    }
+    
+    public function set_params($par) {
+        $this->__params = $par;
     }
 }

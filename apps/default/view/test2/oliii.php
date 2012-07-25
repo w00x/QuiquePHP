@@ -1,2 +1,2 @@
 Correcto !!
-<?php var_dump($params);?>
+<?php var_dump($this->__params);?>
