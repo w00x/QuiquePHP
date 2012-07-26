@@ -1,2 +1,2 @@
 jajajaja
-<?php echo $this->hello;?>
+<?php echo $this->foo;?>

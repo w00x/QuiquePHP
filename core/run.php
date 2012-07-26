@@ -1,8 +1,6 @@
 <?php
 $requestURI = explode('/', $_SERVER['REQUEST_URI']);
 
-require_once 'includes.php';
-
 $route = new Route();
 $routes_match = $route->match_route($_SERVER['REQUEST_URI']);
 $params = array();

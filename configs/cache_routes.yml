@@ -1,0 +1,4 @@
+cache_all: false
+page_cached:
+  - /home/index
+  - /hello

@@ -1,0 +1,7 @@
+default:
+  show-errors: true
+  encoding: utf-8
+  cache:
+    cache: true
+    time: 60 #en segundos
+    
