@@ -25,7 +25,19 @@ class QuiqueModel {
         $password = $app_db_config["password"];
         
         $dsn = "{$driver}:dbname={$db_name};host={$host}";
-        $this->dbh = new PDO($dsn, $user, $password);
+        
+        try {
+            $this->dbh = new PDO($dsn, $user, $password);
+            $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        }
+        catch(PDOException $e) {
+            try {
+                throw new QuiqueExceptions(SHOW_ERRORS,"Error DB",$e->getMessage());
+            }
+            catch(QuiqueExceptions $ex) {
+                $ex->echoHTMLMessage();
+            }
+        }
     }
     
     public function get_dbh() {
@@ -33,15 +45,25 @@ class QuiqueModel {
     }
     
     public function sql_query($sql,$params = array()) {
-        $sth = $this->dbh->prepare($sql);
-        
-        if(count($params) > 0) {
-            $sth->execute($params);
+        try {
+            $sth = $this->dbh->prepare($sql);
+
+            if(count($params) > 0) {
+                $sth->execute($params);
+            }
+            else {
+                $sth->execute();
+            }
+            return $sth;
         }
-        else {
-            $sth->execute();
+        catch(PDOException $e) {
+            try {
+                throw new QuiqueExceptions(SHOW_ERRORS,"Error DB",$e->getMessage());
+            }
+            catch(QuiqueExceptions $ex) {
+                $ex->echoHTMLMessage();
+            }
         }
-        return $sth;
     }
     
     public function select($columns) {
@@ -88,5 +110,9 @@ class QuiqueModel {
             $val = $this->delete_where($column." = :".$column, array(":".$column => $arguments[0]));
             return $val[0];
         }
+    }
+    
+    public function set_model_name($model_name) {
+        $this->model_name = $model_name;
     }
 }

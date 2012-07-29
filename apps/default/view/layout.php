@@ -2,6 +2,7 @@
 "http://www.w3.org/TR/html4/strict.dtd">
 <html>
     <head>
+        <?php $this->echo_meta_charset(); ?>
         <?php $this->load_js(); ?>
         <?php $this->load_css(); ?>
         <title>Quique title</title>

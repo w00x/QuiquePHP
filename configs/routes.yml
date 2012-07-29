@@ -1,8 +1,14 @@
 /lala/:edad/:peso:
+  name: test1
   app: default
   controller: test
   action: hello
+
 /hello:
+  name: test2
   app: default
   controller: test
   action: index
+  
+default:
+  name: test1

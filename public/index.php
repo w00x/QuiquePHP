@@ -35,24 +35,4 @@ set_include_path(implode(PATH_SEPARATOR, array(
     get_include_path(),
 )));
 
-require_once 'includes.php';
-
-$file_config = "config.yml";
-$config = QuiqueConfig::get_arr_yml_config($file_config);
-
-$is_cache = $config["default"]["cache"]["cache"];
-$time_cache = $config["default"]["cache"]["time"];
-
-if($is_cache) {
-    $file_config = "cache_routes.yml";
-    $config_cache = QuiqueConfig::get_arr_yml_config($file_config);
-    
-    $cache = new Cache($config_cache["cache_all"],$config_cache["page_cached"]);
-    $cache->start($time_cache);
-}
-
 require_once 'run.php';
-
-if($is_cache) {
-    $cache->end();
-}

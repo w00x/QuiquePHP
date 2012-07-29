@@ -1,4 +1,9 @@
 <?php
+require_once 'includes.php';
+
+$file_config = "config.yml";
+$config = QuiqueConfig::get_arr_yml_config($file_config);
+
 $requestURI = explode('/', $_SERVER['REQUEST_URI']);
 
 $route = new Route();
@@ -22,7 +27,7 @@ else {
             $params = array();
         }
         else {
-            echo "Pagina no encontrada";die;
+            require_once 'html_errors/404.php';
         }
     }
     else {
@@ -33,21 +38,54 @@ else {
             $params = array();
         }
         else {
-            echo "Pagina no encontrada";die;
+            require_once 'html_errors/404.php';
         }
     }
 }
 
+$show_errors = $config[MODULE_NAME]["show-errors"];
+$enconding = $config[MODULE_NAME]["encoding"];
+
+defined('SHOW_ERRORS') || define('SHOW_ERRORS', $show_errors);
+defined('ENCODING') || define('ENCODING', $enconding);
+
+$is_cache = $config[MODULE_NAME]["cache"]["cache"];
+$time_cache = $config[MODULE_NAME]["cache"]["time"];
+
+if($is_cache) {
+    $file_config = "cache_routes.yml";
+    $config_cache = QuiqueConfig::get_arr_yml_config($file_config);
+    
+    $cache = new Cache($config_cache["cache_all"],$config_cache["page_cached"]);
+    $cache->start($time_cache);
+}
+
+header('Content-type: text/html; charset='.ENCODING);
+
 $require_path = APP_PATH.'/'.MODULE_NAME.'/controller/'.CONTROLLER_NAME.'_controller.php';
 
 if(file_exists($require_path)) {
-    require_once $require_path;
-    $class_name = CONTROLLER_NAME.'_controller';
-    $controller = new $class_name();
-    $action_name = ACTION_NAME;
-    $controller->set_params($params);
-    $controller->$action_name();
+    try {
+        require_once $require_path;
+        $class_name = CONTROLLER_NAME.'_controller';
+        $controller = new $class_name();
+        $action_name = ACTION_NAME;
+        $controller->set_params($params);
+        $controller->$action_name();
+    }
+    catch(Exception $ex) {
+        try {
+            throw new QuiqueExceptions(SHOW_ERRORS,"Error Controller",$ex->getMessage());
+        }
+        catch(QuiqueExceptions $ex) {
+            $ex->echoHTMLMessage();
+        }
+    }
 }
 else {
-    echo "Pagina no encontrada";die;
+    require_once 'html_errors/404.php';
+}
+
+if($is_cache) {
+    $cache->end();
 }

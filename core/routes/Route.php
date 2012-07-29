@@ -16,7 +16,28 @@ class Route {
     
     public function match_route($url) {
         require_once 'spyc/spyc.php';
-        $routes = Spyc::YAMLLoad(CONFIG_PATH.'/routes.yml');
+        
+        $path_routes = CONFIG_PATH.'/routes.yml';
+        if(file_exists($path_routes)) {
+            $routes = Spyc::YAMLLoad($path_routes);
+        }
+        else {
+            try {
+                throw new QuiqueExceptions(SHOW_ERRORS,"Error Routes","Archivo de configuracion de rutas no existe");
+            }
+            catch(QuiqueExceptions $ex) {
+                $ex->echoHTMLMessage();
+            }
+        }
+        
+        if(count($routes) == 0) {
+            try {
+                throw new QuiqueExceptions(SHOW_ERRORS,"Error Routes","No se encontraron rutas registradas");
+            }
+            catch(QuiqueExceptions $ex) {
+                $ex->echoHTMLMessage();
+            }
+        }
         
         foreach ($routes as $key => $route) {
             $pos_dos_puntos = strpos($key, ":");
@@ -30,7 +51,7 @@ class Route {
                 $ruta_pura = $key;
             }
             
-            if($ruta_pura[strlen($ruta_pura)-1] != "/") {
+            if($ruta_pura != "default" && $ruta_pura[strlen($ruta_pura)-1] != "/") {
                 $ruta_pura = $ruta_pura."/";
             }
             
@@ -38,7 +59,49 @@ class Route {
                 $url = $url."/";
             }
             
-            if(strpos($url,$ruta_pura) === 0) {
+            if($url == "/") {
+                if(isset($routes["default"]["name"])){
+                    $name_default = $routes["default"]["name"];
+                }
+                else {
+                    try {
+                        throw new QuiqueExceptions(SHOW_ERRORS,"Error Default","Default path no existe");
+                    }
+                    catch(QuiqueExceptions $ex) {
+                        $ex->echoHTMLMessage();
+                    }
+                }
+                $ruta_default = $this->get_ruta_by_nombre($name_default, $routes);
+                
+                if(!isset($ruta_default["app"])) {
+                    try {
+                        throw new QuiqueExceptions(SHOW_ERRORS,"Error Application","Applicación no existe");
+                    }
+                    catch(QuiqueExceptions $ex) {
+                        $ex->echoHTMLMessage();
+                    }
+                }
+                elseif(!isset($ruta_default["controller"])) {
+                    try {
+                        throw new QuiqueExceptions(SHOW_ERRORS,"Error Controller","Controlador no existe");
+                    }
+                    catch(QuiqueExceptions $ex) {
+                        $ex->echoHTMLMessage();
+                    }
+                }
+                elseif(!isset($ruta_default["action"])) {
+                    try {
+                        throw new QuiqueExceptions(SHOW_ERRORS,"Error Action","Acción no existe");
+                    }
+                    catch(QuiqueExceptions $ex) {
+                        $ex->echoHTMLMessage();
+                    }
+                }
+                else {
+                    return array("app"=>$ruta_default["app"],"controller"=>$ruta_default["controller"],"action"=>$ruta_default["action"],"params"=>array());
+                }
+            }           
+            elseif(strpos($url,$ruta_pura) === 0) {
                 if(count($variables_ruta) > 0) {
                     $params_str = str_replace($ruta_pura, "", $url);
                     
@@ -52,11 +115,79 @@ class Route {
                             for($i=0;$i<count($params_arr);$i++) {
                                 $params[$variables_ruta[$i]] = $params_arr[$i];
                             }
+                            
+                            
+                            if(!isset($routes[$key])) {
+                                try {
+                                    throw new QuiqueExceptions(SHOW_ERRORS,"Error Ruta","Ruta no existe");
+                                }
+                                catch(QuiqueExceptions $ex) {
+                                    $ex->echoHTMLMessage();
+                                }
+                            }
+                            elseif(!isset($routes[$key]["app"])) {
+                                try {
+                                    throw new QuiqueExceptions(SHOW_ERRORS,"Error Application","Applicación no existe");
+                                }
+                                catch(QuiqueExceptions $ex) {
+                                    $ex->echoHTMLMessage();
+                                }
+                            }
+                            elseif(!isset($routes[$key]["controller"])) {
+                                try {
+                                    throw new QuiqueExceptions(SHOW_ERRORS,"Error Controller","Controlador no existe");
+                                }
+                                catch(QuiqueExceptions $ex) {
+                                    $ex->echoHTMLMessage();
+                                }
+                            }
+                            elseif(!isset($routes[$key]["action"])) {
+                                try {
+                                    throw new QuiqueExceptions(SHOW_ERRORS,"Error Action","Acción no existe");
+                                }
+                                catch(QuiqueExceptions $ex) {
+                                    $ex->echoHTMLMessage();
+                                }
+                            }
+                            
                             return array("app"=>$routes[$key]["app"],"controller"=>$routes[$key]["controller"],"action"=>$routes[$key]["action"],"params"=>$params);
                         }
                     }
                 }
                 else {
+                    if(!isset($routes[$key])) {
+                        try {
+                            throw new QuiqueExceptions(SHOW_ERRORS,"Error Ruta","Ruta no existe");
+                        }
+                        catch(QuiqueExceptions $ex) {
+                            $ex->echoHTMLMessage();
+                        }
+                    }
+                    elseif(!isset($routes[$key]["app"])) {
+                        try {
+                            throw new QuiqueExceptions(SHOW_ERRORS,"Error Application","Applicación no existe");
+                        }
+                        catch(QuiqueExceptions $ex) {
+                            $ex->echoHTMLMessage();
+                        }
+                    }
+                    elseif(!isset($routes[$key]["controller"])) {
+                        try {
+                            throw new QuiqueExceptions(SHOW_ERRORS,"Error Controller","Controlador no existe");
+                        }
+                        catch(QuiqueExceptions $ex) {
+                            $ex->echoHTMLMessage();
+                        }
+                    }
+                    elseif(!isset($routes[$key]["action"])) {
+                        try {
+                            throw new QuiqueExceptions(SHOW_ERRORS,"Error Action","Acción no existe");
+                        }
+                        catch(QuiqueExceptions $ex) {
+                            $ex->echoHTMLMessage();
+                        }
+                    }
+                    
                     return array("app"=>$routes[$key]["app"],"controller"=>$routes[$key]["controller"],"action"=>$routes[$key]["action"],"params"=>array());
                 }
             }
@@ -84,6 +215,15 @@ class Route {
         } while($pos_slash !== false);
         
         return $variables;
+    }
+    
+    private function get_ruta_by_nombre($name,$routes) {
+        foreach($routes as $route) {
+            if($route["name"] == $name) {
+                return $route;
+            }
+        }
+        return "";
     }
 }
 ?>
