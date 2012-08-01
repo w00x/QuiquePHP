@@ -1,5 +1,5 @@
 <?php
-class Route {
+class QuiqueRoute {
     public function __construct() {
         
     }

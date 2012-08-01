@@ -6,7 +6,7 @@ $config = QuiqueConfig::get_arr_yml_config($file_config);
 
 $requestURI = explode('/', $_SERVER['REQUEST_URI']);
 
-$route = new Route();
+$route = new QuiqueRoute();
 $routes_match = $route->match_route($_SERVER['REQUEST_URI']);
 $params = array();
 
@@ -23,7 +23,18 @@ else {
         if(count($requestURI) == 4) {
             define('MODULE_NAME',$requestURI[1]);
             define('CONTROLLER_NAME',$requestURI[2]);
-            define('ACTION_NAME',$requestURI[3]);
+            if(is_null($requestURI[3])) {
+                define('ACTION_NAME',null);
+            }
+            else {
+                define('ACTION_NAME',$requestURI[3]);
+            }
+            $params = array();
+        }
+        elseif(count($requestURI) == 3) {
+            define('MODULE_NAME',$requestURI[1]);
+            define('CONTROLLER_NAME',$requestURI[2]);
+            define('ACTION_NAME',null);
             $params = array();
         }
         else {
@@ -34,7 +45,12 @@ else {
         if(count($requestURI) == 3) {
             define('MODULE_NAME','default');
             define('CONTROLLER_NAME',$requestURI[1]);
-            define('ACTION_NAME',$requestURI[2]);
+            if(is_null($requestURI[2])) {
+                define('ACTION_NAME',null);
+            }
+            else {
+                define('ACTION_NAME',$requestURI[2]);
+            }
             $params = array();
         }
         else {
@@ -53,6 +69,14 @@ if(!isset($config[MODULE_NAME])) {
 }
 
 $show_errors = $config[MODULE_NAME]["show-errors"];
+
+if($show_errors) {
+    ini_set('display_errors','On');
+}
+else {
+    ini_set('display_errors','Off');
+}
+
 $enconding = $config[MODULE_NAME]["encoding"];
 
 defined('SHOW_ERRORS') || define('SHOW_ERRORS', $show_errors);
@@ -96,9 +120,14 @@ if(file_exists($require_path)) {
         require_once $require_path;
         $class_name = CONTROLLER_NAME.'_controller';
         $controller = new $class_name();
-        $action_name = ACTION_NAME;
         $controller->set_params($params);
-        $controller->$action_name();
+        $action_name = ACTION_NAME;
+        if(method_exists($controller, $action_name)) {
+            $controller->$action_name();
+        }
+        else {
+            $controller->index();
+        }
     }
     catch(Exception $ex) {
         try {

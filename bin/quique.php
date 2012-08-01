@@ -2,6 +2,10 @@
 defined('APP_PATH') || define('APP_PATH', realpath(dirname(__FILE__) . '/../apps'));
 defined('CONFIG_PATH') || define('CONFIG_PATH', realpath(dirname(__FILE__) . '/../configs'));
 defined('PUBLIC_PATH') || define('PUBLIC_PATH', realpath(dirname(__FILE__) . '/../public'));
+defined('CORE') || define('CORE', realpath(dirname(__FILE__) . '/../core'));
+
+require_once CORE.'/libs/spyc/spyc.php';
+require_once CORE.'/config/QuiqueConfig.php';
 
 function generate_app($app,$argumentos) {
     if(!is_dir(APP_PATH."/".$app)) {
@@ -97,6 +101,25 @@ class Model extends QuiqueModel {
 ';
         fwrite($file_model,$php_code_model);
         fclose($file_model);
+        
+        $db_yml = array();
+        $db_yml[$app]["host"] = "localhost";
+        $db_yml[$app]["user"] = "";
+        $db_yml[$app]["password"] = "";
+        $db_yml[$app]["driver"] = "";
+        $db_yml[$app]["db_name"] = "";
+        
+        QuiqueConfig::apend_array_to_yml("database.yml", $db_yml);
+        echo "add config into database.yml".PHP_EOL;
+        
+        $config_yml = array();
+        $config_yml[$app]["show-errors"] = false;
+        $config_yml[$app]["encoding"] = "utf-8";
+        $config_yml[$app]["cache"]["cache"] = false;
+        $config_yml[$app]["cache"]["time"] = 0;
+        
+        QuiqueConfig::apend_array_to_yml("config.yml", $config_yml);
+        echo "add config into config.yml".PHP_EOL;
     }
     else {
         echo "La aplicación {$app} ya se encuentra creada.".PHP_EOL;
@@ -124,7 +147,7 @@ class '.$controller_name.'_controller extends Controller {';
     }';
         $file_view = fopen(APP_PATH."/{$app}/view/{$controller_name}/{$action}.php","w");
         echo "create file: ".APP_PATH."/{$app}/view/{$controller_name}/{$action}.php".PHP_EOL;
-        fwrite($file_view,"<h1>View {$controller_name}</h1>");
+        fwrite($file_view,"<h1>View {$action}</h1>");
         fclose($file_view);
     }
     $php_code .= '
