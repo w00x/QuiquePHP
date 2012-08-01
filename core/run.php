@@ -43,6 +43,15 @@ else {
     }
 }
 
+if(!isset($config[MODULE_NAME])) {
+    try {
+        throw new QuiqueExceptions(SHOW_ERRORS,"Error Config",MODULE_NAME." No tiene configuracion definida.");
+    }
+    catch(QuiqueExceptions $ex) {
+        $ex->echoHTMLMessage();
+    }
+}
+
 $show_errors = $config[MODULE_NAME]["show-errors"];
 $enconding = $config[MODULE_NAME]["encoding"];
 
@@ -63,9 +72,27 @@ if($is_cache) {
 header('Content-type: text/html; charset='.ENCODING);
 
 $require_path = APP_PATH.'/'.MODULE_NAME.'/controller/'.CONTROLLER_NAME.'_controller.php';
+$require_controller_path = APP_PATH.'/'.MODULE_NAME.'/controller/controller.php';
+$require_model_path = APP_PATH.'/'.MODULE_NAME.'/model/model.php';
+
+defined('LIB_APP_PATH') || define('LIB_APP_PATH', realpath(dirname(__FILE__) . '/../apps/'.MODULE_NAME.'/libs'));
+defined('MODE_APPL_PATH') || define('MODE_APPL_PATH', realpath(dirname(__FILE__) . '/../apps/'.MODULE_NAME.'/model'));
+
+set_include_path(implode(PATH_SEPARATOR, array(
+    realpath(LIB_APP_PATH),
+    get_include_path(),
+)));
+
+set_include_path(implode(PATH_SEPARATOR, array(
+    realpath(MODE_APPL_PATH),
+    get_include_path(),
+)));
+
 
 if(file_exists($require_path)) {
     try {
+        require_once $require_controller_path;
+        require_once $require_model_path;
         require_once $require_path;
         $class_name = CONTROLLER_NAME.'_controller';
         $controller = new $class_name();

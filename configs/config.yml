@@ -2,6 +2,12 @@ default:
   show-errors: true #true,false
   encoding: utf-8 #utf-8,iso-8859-1,windows-1251,utf-16
   cache:
-    cache: true#true,false
+    cache: false#true,false
     time: 60 #in seconds
     
+testing:
+  show-errors: true #true,false
+  encoding: utf-8 #utf-8,iso-8859-1,windows-1251,utf-16
+  cache:
+    cache: false #true,false
+    time: 60 #in seconds

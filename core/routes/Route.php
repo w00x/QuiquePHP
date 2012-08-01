@@ -30,15 +30,6 @@ class Route {
             }
         }
         
-        if(count($routes) == 0) {
-            try {
-                throw new QuiqueExceptions(SHOW_ERRORS,"Error Routes","No se encontraron rutas registradas");
-            }
-            catch(QuiqueExceptions $ex) {
-                $ex->echoHTMLMessage();
-            }
-        }
-        
         foreach ($routes as $key => $route) {
             $pos_dos_puntos = strpos($key, ":");
             $variables_ruta = array();

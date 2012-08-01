@@ -1,6 +1,6 @@
 default:
   host: localhost #host DB
   user: root #user DB
-  password: '08041984' #password DB
+  password: #password DB
   driver: mysql #mysql,cubrid,dblib,firebird,ibm,informix,mysql,oci,odbc,pgsql,sqlite,sqlsrv,4d
-  db_name: quiequetest #database name
+  db_name: #database name
