@@ -211,7 +211,7 @@ if($argc >= 2) {
         $version_cloud = $yml_arr_status["version"];
         $version_local = $yml_arr_status_local["version"];
         
-        if($version_cloud == $version_local) {
+        if($version_cloud > $version_local) {
             echo PHP_EOL."Comenzando la actualizacion del sistema a la version del core: {$version_cloud}".PHP_EOL;
             
             if(isset($yml_arr_status["delete"])) {
