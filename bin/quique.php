@@ -176,17 +176,12 @@ class '.$argumento.'_model extends Model {
     }
 }
 
-function generate_all($app,$argumentos) {
-    echo "all";
-}
-
 if($argc >= 4) {
     
     $options_generate = array("app",
                      "controller",
                      "action",
-                     "model",
-                     "all");
+                     "model");
     
     if($argv[1] == "generate") {
         if(array_search($argv[2], $options_generate) !== false) {
