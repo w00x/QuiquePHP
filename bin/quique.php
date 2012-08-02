@@ -176,7 +176,7 @@ class '.$argumento.'_model extends Model {
     }
 }
 
-if($argc >= 4) {
+if($argc >= 2) {
     
     $options_generate = array("app",
                      "controller",
@@ -199,15 +199,90 @@ if($argc >= 4) {
             $function_name($app,$argumentos);
         }
     }
+    elseif($argv[1] == "update") {
+        $url_status = "https://raw.github.com/w00x/QuiquePHP-Core/master/status.yml";
+        $url_base = "https://raw.github.com/w00x/QuiquePHP-Core/master";
+        
+        $status_yml = download_file_content($url_status);
+                
+        $yml_arr_status = Spyc::YAMLLoadString($status_yml);
+        $yml_arr_status_local = Spyc::YAMLLoad(CORE."/status.yml");
+        
+        $version_cloud = $yml_arr_status["version"];
+        $version_local = $yml_arr_status_local["version"];
+        
+        if($version_cloud == $version_local) {
+            echo PHP_EOL."Comenzando la actualizacion del sistema a la version del core: {$version_cloud}".PHP_EOL;
+            
+            if(isset($yml_arr_status["delete"])) {
+                if(isset($yml_arr_status["delete"]["files"])) {
+                    foreach($yml_arr_status["delete"]["files"] as $file) {
+                        echo "Eliminando archivo ".CORE."/".$file;
+                        unlink(CORE."/".$file);
+                        echo "\t[OK]".PHP_EOL;
+                    }
+                }
+                
+                if(isset($yml_arr_status["delete"]["dirs"])) {
+                    foreach($yml_arr_status["delete"]["dirs"] as $dir) {
+                        if(is_dir(CORE."/".$dir)) {
+                            rmdir(CORE."/".$dir);
+                            echo "Eliminando directorio ".CORE."/".$dir.PHP_EOL;
+                        }
+                    }
+                }
+            }
+            
+            if(isset($yml_arr_status["create"])) {
+                if(isset($yml_arr_status["create"]["dirs"])) {
+                    foreach($yml_arr_status["create"]["dirs"] as $dir) {
+                        if(!is_dir(CORE."/".$dir)) {
+                            mkdir(CORE."/".$dir);
+                            echo "Creando directorio ".CORE."/".$dir.PHP_EOL;
+                        }
+                    }
+                }
+                
+                if(isset($yml_arr_status["create"]["files"])) {
+                    foreach($yml_arr_status["create"]["files"] as $file) {
+                        echo "Actualizando archivo ".CORE."/".$file.PHP_EOL;
+                        echo "\tDescargando ".$url_base."/".$file;
+                        $web_content = download_file_content($url_base."/".$file);
+                        $file = fopen(CORE."/".$file,"w");
+                        fwrite($file, $web_content);
+                        fclose($file);
+                        echo "\t[OK]".PHP_EOL;
+                    }
+                }
+            }
+            
+            echo PHP_EOL."Proceso de actualizacion finalizado.".PHP_EOL;
+        }
+        else {
+            echo "El sistema se encuentra actualizado".PHP_EOL;
+        }
+    }
 }
 else {
     echo "QuiquePHP Lightweight PHP Framework".PHP_EOL.PHP_EOL;
     echo "Cantidad de parametros erronea.".PHP_EOL;
     echo "Modo de uso:".PHP_EOL;
-    echo "\tphp bin/quique generate app\t".PHP_EOL;
-    echo "\tphp bin/quique generate controller\t".PHP_EOL;
-    echo "\tphp bin/quique generate model\t".PHP_EOL;
-    echo "\tphp bin/quique generate all\t".PHP_EOL;
+    echo "\tphp bin/quique generate app [app_name]\t".PHP_EOL;
+    echo "\tphp bin/quique generate controller [app_name] [controller_name] {actions_name}\t".PHP_EOL;
+    echo "\tphp bin/quique generate model [app_name] [model_name]\t".PHP_EOL;
+    echo "\tphp bin/quique update\t".PHP_EOL;
     
     echo PHP_EOL;
+}
+
+function download_file_content($url) {
+    $ch = curl_init();
+    $timeout = 5;
+    curl_setopt($ch,CURLOPT_URL,$url);
+    curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout);
+    $web_content = curl_exec($ch);
+    curl_close($ch);
+    
+    return $web_content;
 }
