@@ -129,12 +129,7 @@ class Model extends QuiqueModel {
 function generate_controller($app,$argumentos) {
     $controller_name = $argumentos[0];
     $actions = array_slice($argumentos, 1);
-    
-    if(!is_dir(APP_PATH."/{$app}")) {
-        echo "La aplicacion {$app} no existe".PHP_EOL;
-        die;
-    }
-    
+
     if(!is_dir(APP_PATH."/{$app}/view/{$controller_name}")) {
         mkdir(APP_PATH."/{$app}/view/{$controller_name}");
         echo "create dir: ".APP_PATH."/{$app}/view/{$controller_name}".PHP_EOL;
@@ -168,11 +163,6 @@ class '.$controller_name.'_controller extends Controller {';
 }
 
 function generate_model($app,$argumentos) {
-    if(!is_dir(APP_PATH."/{$app}")) {
-        echo "La aplicacion {$app} no existe".PHP_EOL;
-        die;
-    }
-    
     foreach($argumentos as $argumento) {
         $file = fopen(APP_PATH."/{$app}/model/{$argumento}_model.php","w");
         echo "create file: ".APP_PATH."/{$app}/controller/{$argumento}_model.php".PHP_EOL;
@@ -221,7 +211,7 @@ if($argc >= 2) {
         $version_cloud = $yml_arr_status["version"];
         $version_local = $yml_arr_status_local["version"];
         
-        if(($version_cloud > $version_local) || (isset($argv[2]) && $argv[2] == "-f")) {
+        if($version_cloud > $version_local) {
             echo PHP_EOL."Comenzando la actualizacion del sistema a la version del core: {$version_cloud}".PHP_EOL;
             
             if(isset($yml_arr_status["delete"])) {
@@ -272,12 +262,17 @@ if($argc >= 2) {
             echo "El sistema se encuentra actualizado".PHP_EOL;
         }
     }
-    elseif($argv[1] == "help") {
-        show_help();
-    }
 }
 else {
-    show_help();
+    echo "QuiquePHP Lightweight PHP Framework".PHP_EOL.PHP_EOL;
+    echo "Cantidad de parametros erronea.".PHP_EOL;
+    echo "Modo de uso:".PHP_EOL;
+    echo "\tphp bin/quique generate app [app_name]\t".PHP_EOL;
+    echo "\tphp bin/quique generate controller [app_name] [controller_name] {actions_name}\t".PHP_EOL;
+    echo "\tphp bin/quique generate model [app_name] [model_name]\t".PHP_EOL;
+    echo "\tphp bin/quique update\t".PHP_EOL;
+    
+    echo PHP_EOL;
 }
 
 function download_file_content($url) {
@@ -290,17 +285,4 @@ function download_file_content($url) {
     curl_close($ch);
     
     return $web_content;
-}
-
-function show_help() {
-    echo "QuiquePHP Lightweight PHP Framework".PHP_EOL.PHP_EOL;
-    echo "Cantidad de parametros erronea.".PHP_EOL;
-    echo "Modo de uso:".PHP_EOL;
-    echo "\tphp bin/quique generate app [app_name]\t".PHP_EOL;
-    echo "\tphp bin/quique generate controller [app_name] [controller_name] {actions_name}\t".PHP_EOL;
-    echo "\tphp bin/quique generate model [app_name] [model_name]\t".PHP_EOL;
-    echo "\tphp bin/quique update {-f}\t".PHP_EOL;
-    echo "\tphp bin/quique help\t".PHP_EOL;
-    
-    echo PHP_EOL;
 }
