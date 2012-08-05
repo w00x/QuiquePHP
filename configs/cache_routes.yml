@@ -1,0 +1,3 @@
+cache_all: false #true|false
+cache_type: disk #disk|mem
+page_cached: #- /url
