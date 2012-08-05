@@ -1,7 +1,0 @@
----
-default:
-  host: localhost
-  user: root
-  password:
-  driver: mysql
-  db_name:

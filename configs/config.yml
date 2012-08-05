@@ -1,7 +1,0 @@
----
-default:
-  show-errors: false
-  encoding: utf-8
-  cache:
-    cache: false
-    time: 60
