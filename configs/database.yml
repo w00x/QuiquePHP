@@ -5,3 +5,9 @@ default:
   password:
   driver: mysql
   db_name:
+test:
+  host: localhost
+  user:
+  password:
+  driver:
+  db_name:

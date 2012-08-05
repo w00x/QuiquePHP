@@ -1,5 +1,10 @@
-#/hello:
-#  name: test2
-#  app: default
-#  controller: test
-#  action: index
+/hello/:edad:
+  name: test
+  app: test
+  controller: hola
+  action: foo
+/hello/lala:
+  name: test2
+  app: test
+  controller: hola
+  action: foo
