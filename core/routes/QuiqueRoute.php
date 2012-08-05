@@ -51,8 +51,8 @@ class QuiqueRoute {
             }
             
             if($url == "/") {
-                if(isset($routes["default"]["name"])){
-                    $name_default = $routes["default"]["name"];
+                if(isset($routes["/"]["name"])){
+                    $name_default = $routes["/"]["name"];
                 }
                 else {
                     try {
@@ -92,7 +92,7 @@ class QuiqueRoute {
                     return array("app"=>$ruta_default["app"],"controller"=>$ruta_default["controller"],"action"=>$ruta_default["action"],"params"=>array());
                 }
             }           
-            elseif(strpos($url,$ruta_pura) === 0) {
+            elseif(strpos($ruta_pura,$url) === 0) {
                 if(count($variables_ruta) > 0) {
                     $params_str = str_replace($ruta_pura, "", $url);
                     
@@ -106,7 +106,6 @@ class QuiqueRoute {
                             for($i=0;$i<count($params_arr);$i++) {
                                 $params[$variables_ruta[$i]] = $params_arr[$i];
                             }
-                            
                             
                             if(!isset($routes[$key])) {
                                 try {

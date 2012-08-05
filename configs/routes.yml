@@ -1,5 +1,5 @@
-#/hello:
-#  name: test2
+#/:
+#  name: home_index
 #  app: default
-#  controller: test
+#  controller: home
 #  action: index
