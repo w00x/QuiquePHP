@@ -139,7 +139,6 @@ class QuiqueRoute {
                                     $ex->echoHTMLMessage();
                                 }
                             }
-                            
                             return array("app"=>$routes[$key]["app"],"controller"=>$routes[$key]["controller"],"action"=>$routes[$key]["action"],"params"=>$params);
                         }
                     }
