@@ -1,11 +1,12 @@
 <?php
+$project_path = dirname(__FILE__) . '/..';
 
-defined('APP_PATH') || define('APP_PATH', realpath(dirname(__FILE__) . '/../apps'));
-defined('CONFIG_PATH') || define('CONFIG_PATH', realpath(dirname(__FILE__) . '/../configs'));
-defined('CORE_PATH') || define('CORE_PATH', realpath(dirname(__FILE__) . '/../core'));
-defined('PROJECT_PATH') || define('PROJECT_PATH', realpath(dirname(__FILE__) . '/..'));
-defined('PUBLIC_PATH') || define('PUBLIC_PATH', realpath(dirname(__FILE__) . '/../public'));
-defined('CACHE_PATH') || define('CACHE_PATH', realpath(dirname(__FILE__) . '/../public/cache'));
+defined('PROJECT_PATH') || define('PROJECT_PATH', realpath($project_path));
+defined('APP_PATH') || define('APP_PATH', realpath(PROJECT_PATH.'/apps'));
+defined('CONFIG_PATH') || define('CONFIG_PATH', realpath(PROJECT_PATH.'/configs'));
+defined('CORE_PATH') || define('CORE_PATH', realpath(PROJECT_PATH . '/core'));
+defined('PUBLIC_PATH') || define('PUBLIC_PATH', realpath(PROJECT_PATH . '/public'));
+defined('CACHE_PATH') || define('CACHE_PATH', realpath(PROJECT_PATH . '/public/cache'));
 
 $page = 'http';
 if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") {
