@@ -149,6 +149,10 @@ class '.$controller_name.'_controller extends Controller {';
         echo "create file: ".APP_PATH."/{$app}/view/{$controller_name}/{$action}.php".PHP_EOL;
         fwrite($file_view,"<h1>View {$action}</h1>");
         fclose($file_view);
+        
+        $file_helper = fopen(APP_PATH."/{$app}/helpers/{$controller_name}_helper.php","w");
+        echo "create file: ".APP_PATH."/{$app}/helpers/{$controller_name}_helper.php".PHP_EOL;
+        fclose($file_helper);
     }
     $php_code .= '
 
