@@ -16,7 +16,7 @@ $page .= "://";
 if ($_SERVER["SERVER_PORT"] != "80") {
     $page .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"]."/";
 } else {
-    $page .= $_SERVER["SERVER_NAME"]."/";
+    $page .= $_SERVER["SERVER_NAME"];
 }
 
 defined('URL_BASE') || define('URL_BASE', $page);
