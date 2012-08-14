@@ -1,5 +1,6 @@
 ---
 default:
+  timezone: ''
   show-errors: false
   encoding: utf-8
   cache:
