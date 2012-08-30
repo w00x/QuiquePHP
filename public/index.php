@@ -36,4 +36,4 @@ set_include_path(implode(PATH_SEPARATOR, array(
     get_include_path(),
 )));
 
-require_once 'run.php';
+require_once CORE_PATH.'/run.php';
