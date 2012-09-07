@@ -113,6 +113,7 @@ class Model extends QuiqueModel {
         echo "add config into database.yml".PHP_EOL;
         
         $config_yml = array();
+        $config_yml[$app]["timezone"] = "";
         $config_yml[$app]["show-errors"] = false;
         $config_yml[$app]["encoding"] = "utf-8";
         $config_yml[$app]["cache"]["cache"] = false;
