@@ -1,7 +1,7 @@
 ---
 default:
-  timezone: ''
-  show-errors: false
+  timezone: 'America/Santiago'
+  show-errors: true
   encoding: utf-8
   cache:
     cache: false
